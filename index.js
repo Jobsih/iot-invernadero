@@ -33,26 +33,28 @@ app.post('/valor', async (req, res) => {
     // Ingresa los datos al documento
     const fbRes = await fbSensores.set({'Temperatura': tempAct , 'Humedad Ambiental':humAAct, "Humedad en Tierra":humTAct})
     //Si los valoes de temperatura o gas sobrepasan su limite entonces enciende el ventilador
-    switch (true) {
-        case temp > tempIdeal: //Enfriar
-            res.send("0001");
-            break;
-        
-        case humA < humAIdeal: //Vaporizar
-            res.send("0100");
-            break;
-      
-        case humT < humTIdeal: //Regar
-            res.send("1000");
-            break;
-      
-        case temp < tempIdeal: //Calentar
-            res.send("0010");
-            break;
-      
-        default:
-          console.log("0000"); // Acción por defecto si no se cumple ninguna condición
-      }
+    let mensaje = [0,0,0,0];
+
+    if (temp > tempIdeal) {
+        mensaje[3]=1;
+
+    }
+
+    if (humA < humAIdeal) {
+        mensaje[1]=1;
+    }
+
+    if (humT < humTIdeal) {
+        mensaje[0]=1;
+    }
+
+    if (temp < tempIdeal) {
+        mensaje[2]=1;
+    }
+
+    var mensajeP= mensaje.join("");
+    res.send(mensajeP);
+
   });
 
   // Ruta POST para configurar valores ideales desde la pagina web
