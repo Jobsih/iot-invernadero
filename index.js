@@ -17,7 +17,7 @@ var humTAct=50;
 var humAAct=100;
 var tempAct=25;
 //Variable configuracion
-var humTIdeal=55;
+var humTIdeal=100;
 var humAIdeal=100;
 var tempIdeal=22;
 
@@ -34,24 +34,24 @@ app.post('/valor', async (req, res) => {
     const fbRes = await fbSensores.set({'Temperatura': tempAct , 'Humedad Ambiental':humAAct, "Humedad en Tierra":humTAct})
     //Si los valoes de temperatura o gas sobrepasan su limite entonces enciende el ventilador
     switch (true) {
-        case temp > 23:
-            res.send("Enfriar");
+        case temp > tempIdeal: //Enfriar
+            res.send("0001");
             break;
         
-        case humA < 55:
-            res.send("Vaporizar");
+        case humA < humAIdeal: //Vaporizar
+            res.send("0100");
             break;
       
-        case humT < 100:
-            res.send("Regar");
+        case humT < humTIdeal: //Regar
+            res.send("1000");
             break;
       
-        case temp < 22:
-            res.send("Calentar");
+        case temp < tempIdeal: //Calentar
+            res.send("0010");
             break;
       
         default:
-          console.log("Nada"); // Acción por defecto si no se cumple ninguna condición
+          console.log("0000"); // Acción por defecto si no se cumple ninguna condición
       }
   });
 
