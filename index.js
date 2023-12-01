@@ -3,14 +3,34 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { db } = require('./firebase.js');
 const path = require("path");
+const socketIO = require('socket.io');
 
 // Crear una instancia de Express
 const app = express();
 
+//Variables de estado
+var humTAct = 50;
+var humAAct = 100;
+var tempAct = 25;
+//Variable configuracion
+var humTIdeal = 100;
+var humAIdeal = 100;
+var tempIdeal = 22;
+
+// Puerto para la aplicación
+const port = process.env.PORT || 3000; // Utiliza el puerto proporcionado por fly.io o el puerto 3000 por defecto
+
 // Middleware para analizar solicitudes POST
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, ".", "/view")));
+
+const server = app.listen(port, () => {
+  console.log(`Servidor escuchando en http://localhost:${port}`);
+});
+
+const io = socketIO(server);
 
 //Variables de estado
 var humTAct=50;
@@ -68,12 +88,25 @@ app.post('/configuraParam', async (req, res) => {
   });
 
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/view/index.html');
+  app.get('/', (req, res) => {
+    const data = {
+        humAAct,
+        humTAct,
+        tempAct,
+    };
+    
+    res.render('index', { data });
 });
+  
+  // Manejo de conexiones WebSocket
+  io.on('connection', (socket) => {
+    console.log('Cliente conectado');
+  
+    // Envía datos iniciales al cliente cuando se conecta
+    socket.emit('data', { humAAct, humTAct, tempAct });
+  });
 
-// Iniciar el servidor en el puerto 3000
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
-});
+  setInterval(() => {
+    // Emite los nuevos valores a todos los clientes conectados
+    io.emit('data', { humAAct, humTAct, tempAct});
+  }, 5000);  // Actualiza cada 5 segundos

@@ -7,10 +7,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="jumbotron"> 
-        <h3>Datos en tiempo real</h3>
-        <p>Temperatura: </p>
-    </div>
+    <body>
+        <h1>Humedad en el Ambiente: <span id="humA"></span>%</h1>
+        <h1>Humedad en Tierra: <span id="humT"></span>%</h1>
+        <h1>Temperatura: <span id="temp"></span>°C</h1>
+      
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+          // Conecta con el servidor WebSocket
+          const socket = io();
+      
+          // Escucha eventos de actualización de datos
+          socket.on('data', (data) => {
+            // Actualiza los datos en la página
+            document.getElementById('humA').innerText = data.humAAct;
+            document.getElementById('humT').innerText = data.humTAct;
+            document.getElementById('temp').innerText = data.tempAct;
+          });
+        </script>
    
     
 </body>
