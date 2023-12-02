@@ -30,13 +30,13 @@
               <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 
                 <li>
-                  <a href="/" class="nav-link text-secondary">
+                  <a href="/" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" fill="#fff" width="24" height="24"><use xlink:href="#speedometer2"></use></svg>
                     Estado actual
                   </a>
                 </li>
                 <li>
-                  <a href="/historial" class="nav-link text-white">
+                  <a href="/historial" class="nav-link text-secondary">
                     <svg class="bi d-block mx-auto mb-1" fill="#fff" width="24" height="24"><use xlink:href="#table"></use></svg>
                     Historial
                   </a>
@@ -57,11 +57,11 @@
 
 
     
-        <div class="m-5">
+        <center style="margin: 20px;">
             <h3>Humedad en el Ambiente: <span id="humA"></span>%</h1>
             <h3>Humedad en Tierra: <span id="humT"></span>%</h1>
             <h3>Temperatura: <span id="temp"></span>°C</h1>
-            </div>
+        </center>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             // Conecta con el servidor WebSocket

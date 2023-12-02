@@ -21,7 +21,6 @@
           <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"></path>
         </symbol>
       </svg>
-    <!-- Encabezado con Bootstrap -->
     <header>
         <div class="px-3 py-2 bg-dark text-white">
           <div class="container">
@@ -30,7 +29,7 @@
               <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 
                 <li>
-                  <a href="/" class="nav-link text-secondary">
+                  <a href="/" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" fill="#fff" width="24" height="24"><use xlink:href="#speedometer2"></use></svg>
                     Estado actual
                   </a>
@@ -42,7 +41,7 @@
                   </a>
                 </li>
                 <li>
-                  <a href="/parametros" class="nav-link text-white">
+                  <a href="/parametros" class="nav-link text-secondary">
                     <svg class="bi d-block mx-auto mb-1" fill="#fff" width="24" height="24"><use xlink:href="#grid"></use></svg>
                     Parámetros
                   </a>
@@ -57,25 +56,47 @@
 
 
     
-        <div class="m-5">
-            <h3>Humedad en el Ambiente: <span id="humA"></span>%</h1>
-            <h3>Humedad en Tierra: <span id="humT"></span>%</h1>
-            <h3>Temperatura: <span id="temp"></span>°C</h1>
+      <div class="container mt-5">
+        <h1 class="mb-4">Configura tus parámetros aquí</h1>
+
+        <form action="/configuraParam" method="post">
+            <div class="form-group">
+                <label for="temp">Temperatura (°C):</label>
+                <input type="number"  class="form-control" id="temp" name="temp" min="-10" max="50" required>
             </div>
+
+            <div class="form-group">
+                <label for="humA">Humedad Ambiental (%):</label>
+                <input type="number"   class="form-control" id="humA" name="humA" min="0" max="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="humT">Humedad en Tierra (%):</label>
+                <input type="number"  class="form-control" id="humT" name="humT" min="0" max="100" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-5">Enviar</button>
+        </form>
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
             // Conecta con el servidor WebSocket
             const socket = io();
-        
-            // Escucha eventos de actualización de datos
+            let p = true;
+
             socket.on('data', (data) => {
-            // Actualiza los datos en la página
-            document.getElementById('humA').innerText = data.humAAct;
-            document.getElementById('humT').innerText = data.humTAct;
-            document.getElementById('temp').innerText = data.tempAct;
+            // Inicializa los campos de entrada con los valores iniciales recibidos del servidor
+            if(p){
+                document.getElementById('humA').value = data.humAIdeal;
+                document.getElementById('humT').value = data.humTIdeal;
+                document.getElementById('temp').value = data.tempIdeal;
+                p=false;
+            }
             });
+
         </script>
-   
+
+    </div>
     
 </body>
 </html>

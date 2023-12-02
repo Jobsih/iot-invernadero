@@ -78,14 +78,18 @@ app.post('/valor', async (req, res) => {
   });
 
   // Ruta POST para configurar valores ideales desde la pagina web
-app.post('/configuraParam', async (req, res) => {
-    const { temp, humA, humT} = req.body;
-    tempIdeal = temp;
-    humTIdeal = humT;
-    humAIdeal = humA;
+  app.post('/configuraParam', async (req, res) => {
+    const { temp, humA, humT } = req.body;
+    tempIdeal = parseInt(temp, 10);
+    humTIdeal = parseInt(humT, 10);
+    humAIdeal = parseInt(humA, 10);
 
-    res.json({ message: 'Datos configurados correctamente' });
-  });
+    console.log('Variables actualizadas:', { tempIdeal, humTIdeal, humAIdeal });
+
+    io.emit('nuevosValoresIdeales', { tempIdeal, humTIdeal, humAIdeal });
+
+    res.redirect("/parametros");
+});
 
 
   app.get('/', (req, res) => {
@@ -97,16 +101,24 @@ app.post('/configuraParam', async (req, res) => {
     
     res.render('index', { data });
 });
+
+app.get('/historial', (req, res) => {
+  res.sendFile(__dirname + '/view/historial.html');
+});
+
+app.get('/parametros', (req, res) => {
+  res.sendFile(__dirname + '/view/parametros.html');
+});
   
   // Manejo de conexiones WebSocket
   io.on('connection', (socket) => {
     console.log('Cliente conectado');
   
     // Envía datos iniciales al cliente cuando se conecta
-    socket.emit('data', { humAAct, humTAct, tempAct });
+    socket.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal});
   });
 
   setInterval(() => {
     // Emite los nuevos valores a todos los clientes conectados
-    io.emit('data', { humAAct, humTAct, tempAct});
+    io.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal});
   }, 5000);  // Actualiza cada 5 segundos
