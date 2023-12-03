@@ -25,7 +25,7 @@
     <header>
         <div class="px-3 py-2 bg-dark text-white">
           <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
               <center>
               <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 
@@ -58,24 +58,63 @@
 
     
         <center style="margin: 20px;">
-            <h3>Humedad en el Ambiente: <span id="humA"></span>%</h1>
-            <h3>Humedad en Tierra: <span id="humT"></span>%</h1>
-            <h3>Temperatura: <span id="temp"></span>°C</h1>
+          <button onclick="mostrarEnTabla()" class="btn btn-primary" style="width: 100%;">
+            Cargar datos</button>
+          <table  class="table table-dark mt-2" border="1">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Humedad Ambiental</th>
+                <th>Humedad en Tierra</th>
+                <th>Temperatura</th>
+              </tr>
+            </thead>
+            <tbody id="jsonTable">
+              <!-- Table body will be populated dynamically using JavaScript -->
+            </tbody>
+          </table>
         </center>
-        <script src="/socket.io/socket.io.js"></script>
         <script>
-            // Conecta con el servidor WebSocket
-            const socket = io();
-        
-            // Escucha eventos de actualización de datos
-            socket.on('data', (data) => {
-            // Actualiza los datos en la página
-            document.getElementById('humA').innerText = data.humAAct;
-            document.getElementById('humT').innerText = data.humTAct;
-            document.getElementById('temp').innerText = data.tempAct;
+          var datitos;
+          var tableBody = document.getElementById("jsonTable");
+
+          function mostrarEnTabla() {
+            tableBody.innerHTML=""
+            obtener().then(data => {
+              datitos = JSON.parse(data);
+              console.log(typeof datitos);
+              console.log(datitos);
+              for (var key in datitos) {
+                if (datitos.hasOwnProperty(key)) {
+                  var rowData = datitos[key];
+                  var row = tableBody.insertRow();
+
+                  // Insertar celdas en la fila
+                  var cellFecha = row.insertCell(0);
+                  var cellHumedadAmbiental = row.insertCell(1);
+                  var cellHumedadTierra = row.insertCell(2);
+                  var cellTemperatura = row.insertCell(3);
+
+                  var fechaLegible = new Date(parseInt(rowData.fecha)).toLocaleString();
+
+                  cellFecha.textContent = fechaLegible;
+                  cellHumedadAmbiental.textContent = rowData["Humedad Ambiental"];
+                  cellHumedadTierra.textContent = rowData["Humedad en Tierra"];
+                  cellTemperatura.textContent = rowData.Temperatura;
+                }
+              }});
+          }
+
+
+
+        function obtener() {
+          // Devolver la promesa generada por fetch
+          return fetch('http://localhost:3000/valores')
+            .then(response => response.json())
+            .catch(error => {
+              console.error('Error al obtener datos:', error);
             });
+        }
         </script>
-   
-    
 </body>
 </html>

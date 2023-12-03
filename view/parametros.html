@@ -24,7 +24,7 @@
     <header>
         <div class="px-3 py-2 bg-dark text-white">
           <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
               <center>
               <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 
@@ -56,26 +56,26 @@
 
 
     
-      <div class="container mt-5">
+      <div class="container mt-5" class="d-flex flex-wrap align-items-center justify-content-center">
         <h1 class="mb-4">Configura tus parámetros aquí</h1>
 
         <form action="/configuraParam" method="post">
             <div class="form-group">
                 <label for="temp">Temperatura (°C):</label>
-                <input type="number"  class="form-control" id="temp" name="temp" min="-10" max="50" required>
+                <input type="number" step="1" pattern="\d+" title="Ingresa un número entero." class="form-control" id="temp" name="temp" min="-10" max="50" required>
             </div>
 
             <div class="form-group">
                 <label for="humA">Humedad Ambiental (%):</label>
-                <input type="number"   class="form-control" id="humA" name="humA" min="0" max="100" required>
+                <input type="number" step="1" pattern="\d+" title="Ingresa un número entero." class="form-control" id="humA" name="humA" min="0" max="100" required>
             </div>
 
             <div class="form-group">
                 <label for="humT">Humedad en Tierra (%):</label>
-                <input type="number"  class="form-control" id="humT" name="humT" min="0" max="100" required>
+                <input type="number" step="1" pattern="\d+" title="Ingresa un número entero." class="form-control" id="humT" name="humT" min="0" max="100" required>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-5">Enviar</button>
+            <button type="submit" class="btn btn-primary mt-5" style="width: 80%;">Enviar</button>
         </form>
 
         <script src="/socket.io/socket.io.js"></script>
