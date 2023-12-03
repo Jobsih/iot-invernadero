@@ -85,7 +85,6 @@
             let p = true;
 
             socket.on('data', (data) => {
-            // Inicializa los campos de entrada con los valores iniciales recibidos del servidor
             if(p){
                 document.getElementById('humA').value = data.humAIdeal;
                 document.getElementById('humT').value = data.humTIdeal;

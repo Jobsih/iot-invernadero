@@ -124,23 +124,17 @@ app.get('/historial', (req, res) => {
 });
 
 app.get('/valores', async(req,res)=>{
-  /*db.collection('sensores').doc('registros').collection('valores')
-  .orderBy("",  'desc')
-  .onSnapshot((querySnapshot)=>{
+  db.collection('sensores').doc('registros').collection('valores')
+  .orderBy("fecha", "desc").onSnapshot((querySnapshot)=>{
     const valores = {};
     // Itera sobre los documentos y agrupa los datos en un objeto JSON
     querySnapshot.forEach((doc) => {
       valores[doc.id] = doc.data();
     });
-    // Imprime el resultado en formato JSON
+        // Imprime el resultado en formato JSON
     prueba = JSON.stringify(valores, null, 2);
-    }).catch((error) => {
-        console.error('Error al obtener datos:', error);
-    });*/
-    let elem10 = prueba.slice(0,10);
-    res.json(prueba)
-
-
+    });
+  res.json(prueba)
 });
 
 app.post('/corregir', async (req, res) => {
@@ -179,10 +173,10 @@ app.get('/parametros', (req, res) => {
     console.log('Cliente conectado');
     consigueValores();  
     // Envía datos iniciales al cliente cuando se conecta
-    socket.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal, prueba});
+    socket.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal});
   });
 
   setInterval(() => {
     // Emite los nuevos valores a todos los clientes conectados
-    io.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal, prueba});
+    io.emit('data', { humAAct, humTAct, tempAct, humAIdeal, humTIdeal, tempIdeal});
   }, 5000);  // Actualiza cada 5 segundos

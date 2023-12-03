@@ -80,9 +80,13 @@
 
           function mostrarEnTabla() {
             tableBody.innerHTML=""
-            obtener().then(data => {
+            return fetch('/valores')
+            .then(response => response.json())
+            .catch(error => {
+              console.error('Error al obtener datos:', error);
+            }).then(data => {
+              console.log(datitos);
               datitos = JSON.parse(data);
-              console.log(typeof datitos);
               console.log(datitos);
               for (var key in datitos) {
                 if (datitos.hasOwnProperty(key)) {
@@ -104,17 +108,6 @@
                 }
               }});
           }
-
-
-
-        function obtener() {
-          // Devolver la promesa generada por fetch
-          return fetch('/valores')
-            .then(response => response.json())
-            .catch(error => {
-              console.error('Error al obtener datos:', error);
-            });
-        }
         </script>
 </body>
 </html>
