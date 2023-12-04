@@ -68,25 +68,25 @@ app.post('/valor', async (req, res) => {
     // Referencia a la collecion que esta en firebase y crea un nuevo documento
     const fbSensores = db.collection('sensores').doc('registros').collection('valores').doc(Date.now().toString())
     // Ingresa los datos al documento
-    const fbRes = await fbSensores.set({'Temperatura': tempAct , 'Humedad Ambiental':humAAct, "Humedad en Tierra":humTAct, 'Fecha': Date.now().toString()})
-    //Si los valoes de temperatura o gas sobrepasan su limite entonces enciende el ventilador
-    let mensaje = [0,0,0,0];
+    const fbRes = await fbSensores.set({'Temperatura': tempAct , 'Humedad Ambiental':humAAct, "Humedad en Tierra":humTAct, 'fecha': Date.now().toString()})
+    //Si los valoes de temperatura o gas sobrepasan su limite entonces enciende el ventilador*/
+    let mensaje = ["O","O","O","O"];
 
     if (temp > tempIdeal) {
-        mensaje[3]=1;
+        mensaje[3]="1";
 
     }
 
     if (humA < humAIdeal) {
-        mensaje[1]=1;
+        mensaje[1]="1";
     }
 
     if (humT < humTIdeal) {
-        mensaje[0]=1;
+        mensaje[0]="1";
     }
 
     if (temp < tempIdeal) {
-        mensaje[2]=1;
+        mensaje[2]="1";
     }
 
     var mensajeP= mensaje.join("");
@@ -110,6 +110,7 @@ app.post('/valor', async (req, res) => {
 
 
   app.get('/', (req, res) => {
+
     const data = {
         humAAct,
         humTAct,
@@ -162,6 +163,31 @@ function consigueValores(){
     });
     
 }
+
+function consigueUltimoValor(){
+  db.collection('sensores').doc('registros').collection('valores')
+  .orderBy('fecha', 'desc') 
+  .limit(1) // Limita la consulta a 1 documento
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const datos = doc.data();
+      humAAct = datos['Humedad Ambiental'];
+      humTAct = datos['Humedad en Tierra'];
+      tempAct = datos.Temperatura;
+
+    });
+  })
+  .catch((error) => {
+    console.error('Error al obtener el documento más reciente:', error);
+  });
+
+}
+
+app.post('/ultimo', (req,res) =>{
+  consigueUltimoValor();
+  res.send('Función ejecutada con éxito');
+});
 
 
 app.get('/parametros', (req, res) => {

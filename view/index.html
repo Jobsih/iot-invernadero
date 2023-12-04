@@ -61,6 +61,16 @@
             </center>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+          function ultimodato() {
+            fetch('/ultimo', {
+              method: 'POST',
+            })
+            .then(response => response.text())
+            .then(message => {
+              console.log(message); // Mensaje recibido del servidor
+            })
+            .catch(error => console.error('Error:', error));
+          }
             // Conecta con el servidor WebSocket
             const socket = io();
         
@@ -71,6 +81,7 @@
             document.getElementById('humT').innerText = data.humTAct;
             document.getElementById('temp').innerText = data.tempAct;
             });
+            window.onload= function(){ultimodato()}
         </script>
    
     
